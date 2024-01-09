@@ -39,7 +39,7 @@ while running:
                 bullet_y = gun_y + (gun_height // 2) * bullet_dy
                 new_bullet = pygame.Rect(bullet_x, bullet_y, 5, 5), (bullet_dx, bullet_dy)
                 bullets.append(new_bullet)
-
+ 
     if random.random() < 0.01:  # 1% chance to spawn a new enemy each frame
         enemy_shape = random.choice(enemy_shapes)
         enemy_color = random.choice(enemy_colors)
@@ -67,8 +67,8 @@ while running:
     screen.blit(rotated_gun, rotated_rect)
     for bullet in bullets[:]:
         pygame.draw.rect(screen, WHITE, bullet[0])
-        bullet[0].x += 5 * bullet[1][0]
-        bullet[0].y += 5 * bullet[1][1]
+        bullet[0].x += 7 * bullet[1][0]
+        bullet[0].y += 7 * bullet[1][1]
         for enemy in enemies:
             if bullet[0].colliderect(enemy['rect']) and enemy['visible']:
                 bullets.remove(bullet)
