@@ -1,26 +1,37 @@
-# Drawinator Shooter Game
+# 🚀 Alphanumerical DRAWINATOR 🚀
 
-This is a simple shooter game built with Pygame. The player controls a gun that can rotate left and right, and shoot bullets. Enemies of different shapes and colors spawn at the top of the screen and move downwards. The player's goal is to shoot as many enemies as possible.
+![Gameplay](gameplay.png)
 
-## Features
+Welcome to **DRAWINATOR**, a fun and engaging game where you shoot down enemies with alphanumeric bullets! This game is built using Python and the Pygame library.
 
-- Player-controlled gun that can rotate and shoot bullets
-- Enemies of different shapes and colors that spawn randomly
-- Score counter that increases each time an enemy is shot
-- score display
+## 🎮 How to Play
 
-## How to Run
+Use the left and right arrow keys to move your gun. Press the space bar to shoot bullets. Each bullet is assigned a random character from alphanumericals. 
 
-1. Ensure you have Python 3 and Pygame installed on your machine.
-2. Clone this repository or download the `artist.py` file.
-3. Run the script using Python: `python artist.py`
+When the game is paused, a "PAUSED" text will appear in the center of the screen. Press 'P' to pause and unpause the game.
 
-## Controls
+## 🚀 Features
 
-- Press the left arrow key to rotate the gun to the left.
-- Press the right arrow key to rotate the gun to the right.
-- Press the space bar to shoot a bullet.
+- **Multishot**: After defeating a boss, you gain the ability to shoot multiple bullets at once for a short period of time.
+- **Boss Enemies**: Occasionally, a boss enemy will appear. Boss enemies are larger and have more health than regular enemies.
+- **Killer Enemies**: These enemies are dangerous! If they collide with your gun, the game ends.
 
-## Future Improvements
+## 🛠️ Installation
 
-- Add a high score system.
+1. Clone this repository: `git clone https://github.com/MrCoolPotato/Drawinator.git`
+2. Navigate to the project directory: `cd`
+3. Install the required Python libraries: `pip install -r requirements.txt`
+4. Run the game: `python artist.py`
+
+## 📝 Requirements
+
+- Python 3.6 or above
+- Pygame 1.9.6 or above
+
+## 📜 License
+
+This project is licensed under the terms of the Unlicense license.
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/MrCoolPotato/Drawinator/issues).
