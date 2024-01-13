@@ -12,6 +12,17 @@ WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
+ORANGE = (255, 165, 0)
+PURPLE = (128, 0, 128)
+CYAN = (0, 255, 255)
+MAGENTA = (255, 0, 255)
+LIME = (0, 255, 0)
+PINK = (255, 192, 203)
+BROWN = (165, 42, 42)
+NAVY_BLUE = (0, 0, 128)
+LIGHT_BLUE = (173, 216, 230)
+
 
 gun_width, gun_height = 20, 60
 gun_x, gun_y = screen_width // 2, screen_height - gun_height // 2
@@ -21,8 +32,8 @@ bullets = []
 enemies = []
 killer_enemies = []
 
-enemy_shapes = ['square', 'triangle', 'circle']
-enemy_colors = [RED, GREEN, BLUE]
+enemy_shapes = ['square', 'triangle', 'circle', 'pentagon']
+enemy_colors = [RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN, MAGENTA, LIME, PINK, BROWN, NAVY_BLUE, LIGHT_BLUE]
 
 boss = None
 multishot = False
@@ -36,6 +47,43 @@ paused_font = pygame.font.Font(None, 72)
 score = 0
 font = pygame.font.Font(None, 36)
 
+boss_colors = [RED, GREEN, BLUE, YELLOW, ORANGE, PURPLE, CYAN, MAGENTA, LIME, PINK, BROWN, NAVY_BLUE, LIGHT_BLUE]
+boss_sizes = [100, 150, 200]
+boss_healths = [10, 15, 20]
+boss_velocities = [1]
+boss_shapes = ['square', 'circle', 'triangle', 'pentagon']
+
+
+def spawn_boss():
+    return {
+        'shape': random.choice(boss_shapes),
+        'rect': pygame.Rect(random.randint(0, screen_width - random.choice(boss_sizes)), -random.choice(boss_sizes), random.choice(boss_sizes), random.choice(boss_sizes)),
+        'color': random.choice(boss_colors),
+        'visible': True,
+        'health': random.choice(boss_healths),
+        'velocity': random.choice(boss_velocities)
+    }
+
+def create_bullet(angle, offset=0):
+    bullet_dx = math.sin(math.radians(-angle + offset))
+    bullet_dy = -math.cos(math.radians(-angle + offset))
+    bullet_x = gun_x + (gun_height // 2) * bullet_dx
+    bullet_y = gun_y + (gun_height // 2) * bullet_dy
+    bullet_char = random.choice(alphabet)
+    return pygame.Rect(bullet_x, bullet_y, 5, 5), (bullet_dx, bullet_dy), bullet_char
+
+def move_and_remove_offscreen_bullets():
+    for bullet in bullets[:]:
+        bullet[0].x += bullet[1][0] * 5
+        bullet[0].y += bullet[1][1] * 5
+        if bullet[0].y > screen_height or bullet[0].y < 0:
+            bullets.remove(bullet)
+
+def remove_offscreen_enemies(enemy_list):
+    for enemy in enemy_list[:]:
+        if enemy['rect'].y > screen_height:
+            enemy_list.remove(enemy)
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -43,33 +91,17 @@ while running:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                bullet_dx = math.sin(math.radians(-gun_angle))
-                bullet_dy = -math.cos(math.radians(-gun_angle))
-                bullet_x = gun_x + (gun_height // 2) * bullet_dx
-                bullet_y = gun_y + (gun_height // 2) * bullet_dy
-                bullet_char = random.choice(alphabet)  # Assign a random character from the alphabet to the bullet
-                new_bullet = pygame.Rect(bullet_x, bullet_y, 5, 5), (bullet_dx, bullet_dy), bullet_char
-                bullets.append(new_bullet)
+               bullets.append(create_bullet(gun_angle))
             if multishot:
-                    bullet_dx_left = math.sin(math.radians(-gun_angle - 10))
-                    bullet_dy_left = -math.cos(math.radians(-gun_angle - 10))
-                    bullet_x_left = gun_x + (gun_height // 2) * bullet_dx_left
-                    bullet_y_left = gun_y + (gun_height // 2) * bullet_dy_left
-                    new_bullet_left = pygame.Rect(bullet_x_left, bullet_y_left, 5, 5), (bullet_dx_left, bullet_dy_left), random.choice(alphabet)
-                    bullets.append(new_bullet_left)
-                    bullet_dx_right = math.sin(math.radians(-gun_angle + 10))
-                    bullet_dy_right = -math.cos(math.radians(-gun_angle + 10))
-                    bullet_x_right = gun_x + (gun_height // 2) * bullet_dx_right
-                    bullet_y_right = gun_y + (gun_height // 2) * bullet_dy_right
-                    new_bullet_right = pygame.Rect(bullet_x_right, bullet_y_right, 5, 5), (bullet_dx_right, bullet_dy_right), random.choice(alphabet)
-                    bullets.append(new_bullet_right)
+               bullets.append(create_bullet(gun_angle, -10))
+               bullets.append(create_bullet(gun_angle, 10))
             elif event.key == pygame.K_p:  
                 paused = not paused        
 
-    if not paused: 
+    if not paused:
         
-        if boss is None and random.random() < 0.001:  # 0.1% chance to spawn a new boss each frame
-            boss = {'shape': 'square', 'color': (255, 255, 0), 'rect': pygame.Rect(random.randint(0, screen_width), 0, 40, 40), 'velocity': 1, 'visible': True, 'boss': True, 'health': 10}
+        if boss is None and random.random() < 0.001:  
+            boss = spawn_boss()
         
         if len(killer_enemies) < min(score // 50, 6) and random.random() < 0.01:  # 1% chance to spawn a new killer enemy each frame
             new_killer_enemy = {'shape': 'circle', 'color': WHITE, 'rect': pygame.Rect(random.randint(0, screen_width), 0, 20, 20), 'velocity': 1, 'visible': True}
@@ -96,40 +128,62 @@ while running:
         gun_rect = pygame.Rect(0, 0, gun_width, gun_height)
         pygame.draw.rect(gun_surface, WHITE, gun_rect)
         rotated_gun = pygame.transform.rotate(gun_surface, gun_angle)
-        rotated_rect = rotated_gun.get_rect(center=(gun_x, gun_y))  # update the gun position
+        rotated_rect = rotated_gun.get_rect(center=(gun_x, gun_y))  
         
         screen.blit(rotated_gun, rotated_rect)
-
+        
+        bullets_to_remove = []
         for bullet in bullets[:]:
             bullet_text = font.render(bullet[2], True, WHITE)  # Render the bullet's character
             screen.blit(bullet_text, (bullet[0].x, bullet[0].y))  # Draw the bullet's character
             for enemy in enemies:
                 if bullet[0].colliderect(enemy['rect']) and enemy['visible']:
-                    bullets.remove(bullet)
-                    enemy['visible'] = False
-                    score += 1
-                    break
-            if boss is not None and bullet[0].colliderect(boss['rect']) and boss['visible']:
-                bullets.remove(bullet)
-                boss['health'] -= 1  # decrease the boss health
-                if boss is not None and 'health' in boss and boss['health'] <= 0:  # if the boss health is 0 or less
-                    boss['visible'] = False  # set the boss to not visible
-                    score += 10
-                    multishot = True
+                     bullets_to_remove.append(bullet)
+                     enemy['visible'] = False
+                     score += 1
+                     break
+                if boss is not None and boss['visible'] and bullet[0].colliderect(boss['rect']):
+                    bullets_to_remove.append(bullet)
+                    boss['health'] = max(0, boss['health'] - 1)
+                    if boss['health'] <= 0:  # if the boss health is 0 or less
+                        boss['visible'] = False  # set the boss to not visible
+                        score += 10
+                        multishot = True
+                        multishot_start_time = pygame.time.get_ticks()
                     multishot_start_time = pygame.time.get_ticks()
 
         for bullet in bullets:
             bullet[0].x += bullet[1][0] * 5  # Move the bullet in the x direction
             bullet[0].y += bullet[1][1] * 5  # Move the bullet in the y direction
+                 
+        for bullet in bullets[:]:  
+            if bullet[0].y > screen_height or bullet[0].y < 0:  # if the bullet goes off the screen
+               bullets_to_remove.append(bullet)
+
+        for bullet in bullets_to_remove:
+            if bullet in bullets:
+               bullets.remove(bullet)       
+
+        for enemy in enemies[:]:  
+            if enemy['rect'].y > screen_height:  # if the enemy goes off the screen
+                    enemies.remove(enemy)  # remove the enemy from the list
+           
+        for killer_enemy in killer_enemies[:]:  
+            if killer_enemy['rect'].y > screen_height:  # if the killer enemy goes off the screen
+                    killer_enemies.remove(killer_enemy)  # remove the killer enemy from the list
 
         if boss is not None and boss['visible']:
-                    pygame.draw.rect(screen, boss['color'], boss['rect'], 2)
-                    boss['rect'].y += boss['velocity']
+            if boss['shape'] == 'square':
+                pygame.draw.rect(screen, boss['color'], boss['rect'], 2)
+            elif boss['shape'] == 'circle':
+                pygame.draw.ellipse(screen, boss['color'], boss['rect'], 2)
+            elif boss['shape'] == 'triangle':
+                pygame.draw.polygon(screen, boss['color'], [(boss['rect'].x, boss['rect'].y + boss['rect'].height), (boss['rect'].x + boss['rect'].width // 2, boss['rect'].y), (boss['rect'].x + boss['rect'].width, boss['rect'].y + boss['rect'].height)], 2)
+            elif boss['shape'] == 'pentagon':
+                pygame.draw.polygon(screen, boss['color'], [(boss['rect'].x + boss['rect'].width // 2, boss['rect'].y), (boss['rect'].x + boss['rect'].width, boss['rect'].y + boss['rect'].height // 3), (boss['rect'].x + 2 * boss['rect'].width // 3, boss['rect'].y + boss['rect'].height), (boss['rect'].x + boss['rect'].width // 3, boss['rect'].y + boss['rect'].height), (boss['rect'].x, boss['rect'].y + boss['rect'].height // 3)], 2)
+            boss['rect'].y += boss['velocity']
         else:
             boss = None  # reset the boss when it's not visible
-
-        if boss is None and random.random() < 0.001:  # 0.1% chance to spawn a new boss each frame
-            boss = {'shape': 'square', 'color': (255, 255, 0), 'rect': pygame.Rect(random.randint(0, screen_width), 0, 40, 40), 'velocity': 1, 'visible': True, 'boss': True, 'health': 10}
 
         if multishot and pygame.time.get_ticks() - multishot_start_time > 5000:  # 5 seconds have passed
             multishot = False                
@@ -141,7 +195,7 @@ while running:
             if killer_enemy['rect'].colliderect(rotated_rect):  # if the killer enemy collides with the gun
                 running = False  # end the game
             elif killer_enemy['rect'].y > screen_height:  # if the killer enemy goes off the screen
-                killer_enemies.remove(killer_enemy)  # remove the killer enemy
+                killer_enemies.remove(killer_enemy)  # remove the killer enemy      
         
         for enemy in enemies:
             if enemy['visible']:
@@ -151,8 +205,14 @@ while running:
                     pygame.draw.polygon(screen, enemy['color'], [(enemy['rect'].x, enemy['rect'].y + enemy['rect'].height), (enemy['rect'].x + enemy['rect'].width // 2, enemy['rect'].y), (enemy['rect'].x + enemy['rect'].width, enemy['rect'].y + enemy['rect'].height)], 2)
                 elif enemy['shape'] == 'circle':
                     pygame.draw.circle(screen, enemy['color'], enemy['rect'].center, enemy['rect'].width // 2, 2)
+                elif enemy['shape'] == 'pentagon':
+                    pygame.draw.polygon(screen, enemy['color'], [(enemy['rect'].x + enemy['rect'].width // 2, enemy['rect'].y), (enemy['rect'].x + enemy['rect'].width, enemy['rect'].y + enemy['rect'].height // 3), (enemy['rect'].x + 2 * enemy['rect'].width // 3, enemy['rect'].y + enemy['rect'].height), (enemy['rect'].x + enemy['rect'].width // 3, enemy['rect'].y + enemy['rect'].height), (enemy['rect'].x, enemy['rect'].y + enemy['rect'].height // 3)], 2)
                 enemy['rect'].y += enemy['velocity']
-
+            else:
+                enemies.remove(enemy)
+            if enemy['rect'].colliderect(rotated_rect):
+                enemies.remove(enemy)    
+                   
         score_text = font.render(f'Score: {score}', True, WHITE)
         screen.blit(score_text, (screen_width - score_text.get_width() - 10, 10))
                
