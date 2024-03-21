@@ -118,9 +118,9 @@ while running:
 
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
-            gun_x = max(gun_x - 5, 0)  # move the gun to the left, but not beyond the left edge of the screen
+            gun_x = max(gun_x - 5, 0)  
         if keys[pygame.K_RIGHT]:
-            gun_x = min(gun_x + 5, screen_width - gun_width)  # move the gun to the right, but not beyond the right edge of the screen
+            gun_x = min(gun_x + 5, screen_width - gun_width) 
 
         screen.fill((0, 0, 0))  
 
@@ -134,8 +134,8 @@ while running:
         
         bullets_to_remove = []
         for bullet in bullets[:]:
-            bullet_text = font.render(bullet[2], True, WHITE)  # Render the bullet's character
-            screen.blit(bullet_text, (bullet[0].x, bullet[0].y))  # Draw the bullet's character
+            bullet_text = font.render(bullet[2], True, WHITE)  
+            screen.blit(bullet_text, (bullet[0].x, bullet[0].y))  
             for enemy in enemies:
                 if bullet[0].colliderect(enemy['rect']) and enemy['visible']:
                      bullets_to_remove.append(bullet)
@@ -145,19 +145,19 @@ while running:
                 if boss is not None and boss['visible'] and bullet[0].colliderect(boss['rect']):
                     bullets_to_remove.append(bullet)
                     boss['health'] = max(0, boss['health'] - 1)
-                    if boss['health'] <= 0:  # if the boss health is 0 or less
-                        boss['visible'] = False  # set the boss to not visible
+                    if boss['health'] <= 0: 
+                        boss['visible'] = False 
                         score += 10
                         multishot = True
                         multishot_start_time = pygame.time.get_ticks()
                     multishot_start_time = pygame.time.get_ticks()
 
         for bullet in bullets:
-            bullet[0].x += bullet[1][0] * 5  # Move the bullet in the x direction
-            bullet[0].y += bullet[1][1] * 5  # Move the bullet in the y direction
+            bullet[0].x += bullet[1][0] * 5  
+            bullet[0].y += bullet[1][1] * 5 
                  
         for bullet in bullets[:]:  
-            if bullet[0].y > screen_height or bullet[0].y < 0:  # if the bullet goes off the screen
+            if bullet[0].y > screen_height or bullet[0].y < 0:  
                bullets_to_remove.append(bullet)
 
         for bullet in bullets_to_remove:
@@ -165,12 +165,12 @@ while running:
                bullets.remove(bullet)       
 
         for enemy in enemies[:]:  
-            if enemy['rect'].y > screen_height:  # if the enemy goes off the screen
-                    enemies.remove(enemy)  # remove the enemy from the list
+            if enemy['rect'].y > screen_height:  
+                    enemies.remove(enemy)  
            
         for killer_enemy in killer_enemies[:]:  
-            if killer_enemy['rect'].y > screen_height:  # if the killer enemy goes off the screen
-                    killer_enemies.remove(killer_enemy)  # remove the killer enemy from the list
+            if killer_enemy['rect'].y > screen_height:  
+                    killer_enemies.remove(killer_enemy) 
 
         if boss is not None and boss['visible']:
             if boss['shape'] == 'square':
@@ -183,19 +183,19 @@ while running:
                 pygame.draw.polygon(screen, boss['color'], [(boss['rect'].x + boss['rect'].width // 2, boss['rect'].y), (boss['rect'].x + boss['rect'].width, boss['rect'].y + boss['rect'].height // 3), (boss['rect'].x + 2 * boss['rect'].width // 3, boss['rect'].y + boss['rect'].height), (boss['rect'].x + boss['rect'].width // 3, boss['rect'].y + boss['rect'].height), (boss['rect'].x, boss['rect'].y + boss['rect'].height // 3)], 2)
             boss['rect'].y += boss['velocity']
         else:
-            boss = None  # reset the boss when it's not visible
+            boss = None  
 
-        if multishot and pygame.time.get_ticks() - multishot_start_time > 5000:  # 5 seconds have passed
+        if multishot and pygame.time.get_ticks() - multishot_start_time > 5000:  
             multishot = False                
 
         for killer_enemy in killer_enemies[:]:
             if killer_enemy['visible']:
                 pygame.draw.circle(screen, WHITE, killer_enemy['rect'].center, killer_enemy['rect'].width // 2)
                 killer_enemy['rect'].y += killer_enemy['velocity']
-            if killer_enemy['rect'].colliderect(rotated_rect):  # if the killer enemy collides with the gun
-                running = False  # end the game
-            elif killer_enemy['rect'].y > screen_height:  # if the killer enemy goes off the screen
-                killer_enemies.remove(killer_enemy)  # remove the killer enemy      
+            if killer_enemy['rect'].colliderect(rotated_rect):  
+                running = False  
+            elif killer_enemy['rect'].y > screen_height:  
+                killer_enemies.remove(killer_enemy)     
         
         for enemy in enemies:
             if enemy['visible']:
