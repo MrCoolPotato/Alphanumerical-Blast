@@ -6,7 +6,7 @@ Welcome to **DRAWINATOR**, a fun and engaging game where you shoot down enemies 
 
 ## 🎮 How to Play
 
-Use the left and right arrow keys to move your gun. Press the space bar to shoot bullets. Each bullet is assigned a random character from alphanumericals. 
+Use the left and right arrow keys to move your gun. Press the space bar to shoot bullets. Each bullet is assigned a random character from alphanumericals.
 
 When the game is paused, a "PAUSED" text will appear in the center of the screen. Press 'P' to pause and unpause the game.
 
@@ -27,11 +27,3 @@ When the game is paused, a "PAUSED" text will appear in the center of the screen
 
 - Python 3.6 or above
 - Pygame 1.9.6 or above
-
-## 📜 License
-
-This project is licensed under the terms of the Unlicense license.
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/MrCoolPotato/Drawinator/issues).
