@@ -8,6 +8,15 @@ screen_width, screen_height = 800, 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 
+try:
+    pygame.mixer.init()
+    pygame.mixer.music.load('bgm.mp3')
+    pygame.mixer.music.set_volume(0.5)
+    pygame.mixer.music.play(-1)
+    mixer_initialized = True
+except pygame.error as e:
+    print("An error occurred with the pygame mixer. Details:", e)
+
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
@@ -96,7 +105,12 @@ while running:
                bullets.append(create_bullet(gun_angle, -10))
                bullets.append(create_bullet(gun_angle, 10))
             elif event.key == pygame.K_p:  
-                paused = not paused        
+                paused = not paused
+                if 'mixer_initialized' in globals():
+                    if paused and mixer_initialized:
+                        pygame.mixer.music.pause()  
+                    elif mixer_initialized:
+                        pygame.mixer.music.unpause()      
 
     if not paused:
         
@@ -225,3 +239,4 @@ while running:
 
 pygame.quit()
 sys.exit()
+
