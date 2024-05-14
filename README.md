@@ -28,6 +28,6 @@ When the game is paused, a "PAUSED" text will appear in the center of the screen
 4. Run the game: `python artist.py`
 
 ## 📝 Requirements
-
+(if you're running the source code)
 - Python 3.6 or above
 - Pygame 1.9.6 or above
