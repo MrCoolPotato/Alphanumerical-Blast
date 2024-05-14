@@ -17,7 +17,11 @@ When the game is paused, a "PAUSED" text will appear in the center of the screen
 - **Killer Enemies**: These enemies are dangerous! If they collide with your gun, the game ends.
 
 ## 🛠️ Installation
+-Regular-
+1. Download the latest release version
+2. Run the artist.exe
 
+-From the source code-
 1. Clone this repository: `git clone https://github.com/MrCoolPotato/Drawinator.git`
 2. Navigate to the project directory: `cd`
 3. Install the required Python libraries: `pip install -r requirements.txt`
