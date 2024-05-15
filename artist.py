@@ -117,11 +117,11 @@ while running:
         if boss is None and random.random() < 0.001:  
             boss = spawn_boss()
         
-        if len(killer_enemies) < min(score // 50, 6) and random.random() < 0.01:  # 1% chance to spawn a new killer enemy each frame
+        if len(killer_enemies) < min(score // 30, 6) and random.random() < 0.01:  # 1% chance to spawn a new killer enemy each frame
             new_killer_enemy = {'shape': 'circle', 'color': WHITE, 'rect': pygame.Rect(random.randint(0, screen_width), 0, 20, 20), 'velocity': 1, 'visible': True}
             killer_enemies.append(new_killer_enemy)
 
-        if random.random() < 0.01:  # 1% chance to spawn a new enemy each frame
+        if random.random() < 0.02:  # 2% chance to spawn a new enemy each frame
             enemy_shape = random.choice(enemy_shapes)
             enemy_color = random.choice(enemy_colors)
             enemy_x = random.randint(0, screen_width)
