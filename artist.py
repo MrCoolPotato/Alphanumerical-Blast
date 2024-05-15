@@ -10,12 +10,17 @@ clock = pygame.time.Clock()
 
 try:
     pygame.mixer.init()
-    pygame.mixer.music.load('bgm.mp3')
-    pygame.mixer.music.set_volume(0.5)
-    pygame.mixer.music.play(-1)
+    bgm = pygame.mixer.Sound('bgm.mp3')
+    bgm.play(loops=-1)
+    bgm.set_volume(0.5)
     mixer_initialized = True
 except pygame.error as e:
     print("An error occurred with the pygame mixer. Details:", e)
+    mixer_initialized = False
+
+def play_bgm():
+    if mixer_initialized:
+        bgm.play(loops=-1)
 
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)
