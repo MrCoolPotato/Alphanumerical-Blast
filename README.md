@@ -1,8 +1,8 @@
-# Alphanumerical DRAWINATOR
+# Alphanumerical BLAST
 
 ![Gameplay](gameplay.png)
 
-Welcome to **DRAWINATOR**, a fun and engaging game where you shoot down enemies with alphanumeric bullets! This game is built using Python and the Pygame library.
+Welcome to **A-BLAST**, a fun and engaging game where you shoot down enemies with alphanumeric bullets! This game is built using Python and the Pygame library.
 
 ## How to Play
 
@@ -25,7 +25,7 @@ When the game is paused, a "PAUSED" text will appear in the center of the screen
 
 -From the source code-
 
-1. Clone this repository: `git clone https://github.com/MrCoolPotato/Drawinator.git`
+1. Clone this repository: `git clone https://github.com/MrCoolPotato/Alphanumerical-Blast.git`
 2. Navigate to the project directory: `cd`
 3. Install the required Python libraries: `pip install -r requirements.txt`
 4. Run the game: `python artist.py`
